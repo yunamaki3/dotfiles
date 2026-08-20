@@ -1,85 +1,64 @@
-format = "${custom.directory}$git_branch$git_status$c$nodejs$character"
+format = """
+$directory\
+[ ](fg:#88c0d0 bg:#1d2230)\
+$git_branch\
+$git_status\
+[ ](fg:#1d2230)\
+
+$character"""
+
+right_format = """
+$cmd_duration\
+$username\
+✨$time"""
+
 add_newline = true
-command_timeout = 700
 
-# パスを最大4階層に省略し、各ディレクトリを右向きの色付きセグメントで描画する。
-[custom.directory]
-command = '''
-display_path="$PWD"
-case "$display_path" in
-  "$HOME") display_path="~" ;;
-  "$HOME"/*) display_path="~/${display_path#"$HOME"/}" ;;
-esac
+[username]
+style_user = "white bold"
+style_root = "black bold"
+format = "user: [$user]($style) "
+disabled = false
 
-printf '%s\n' "$display_path" | awk -F/ '
-  {
-    colors[0] = "125;211;252"
-    colors[1] = "196;181;253"
-    colors[2] = "94;234;212"
-    colors[3] = "253;186;116"
-    start = NF > 4 ? NF - 3 : 1
+[directory]
+style = "fg:#2e3440 bg:#88c0d0 bold"
+truncation_length = 10
+truncate_to_repo = false
+truncation_symbol = "…/"
+read_only = " 󰌾 "
+read_only_style = "fg:#f7768e bg:#1a1b26"
+format = "[ $path ]($style)[$read_only]($read_only_style)"
 
-    if (start > 1) {
-      printf "\033[1;38;2;11;18;32;48;2;148;163;184m … \033[0m"
-      printf "\033[38;2;148;163;184;48;2;%sm\033[0m", colors[0]
-    }
+[directory.substitutions]
+"Documents" = "󰈙 "
+"Downloads" = " "
+"Music" = " "
+"Pictures" = " "
 
-    for (i = start; i <= NF; i++) {
-      color_index = (i - start) % 4
-      code = colors[color_index]
-      label = $i
-      if (i == start) label = "󰉋  " label
+[aws]
+disabled = true
 
-      printf "\033[1;38;2;11;18;32;48;2;%sm %s \033[0m", code, label
-      if (i < NF) {
-        next_code = colors[(color_index + 1) % 4]
-        printf "\033[38;2;%s;48;2;%sm\033[0m", code, next_code
-      } else {
-        printf "\033[38;2;%sm\033[0m", code
-      }
-    }
-  }
-'
-
-if [ ! -w "$PWD" ]; then
-  printf ' \033[1;38;2;251;113;133m󰌾\033[0m'
-fi
-'''
-when = true
-format = "$output"
-style = ""
-unsafe_no_escape = true
-shell = ["sh"]
+[gcloud]
+disabled = true
 
 [git_branch]
-symbol = "git "
-format = " [](#c4b5fd)[$symbol$branch](bold fg:#0b1220 bg:#c4b5fd)[](#c4b5fd)"
+symbol = ""
+style = "bg:#1d2230"
+format = "[[ $symbol $branch ](fg:#769ff0 bg:#1d2230)]($style)"
 
 [git_status]
-format = " [](#fbbf24)[$all_status](bold fg:#0b1220 bg:#fbbf24)[](#fbbf24)"
-conflicted = ""
-ahead = ""
-behind = ""
-diverged = ""
-up_to_date = ""
-untracked = " U$count"
-stashed = ""
-modified = " M$count"
-staged = " A$count"
-renamed = ""
-deleted = " D$count"
-typechanged = ""
+style = "bg:#1d2230"
+format = "[[($all_status$ahead_behind )](fg:#769ff0 bg:#1d2230)]($style)"
 
-[c]
-symbol = " "
-style = "bold #7dd3fc"
-format = " [${symbol}${version}]($style)"
+[cmd_duration]
+min_time = 1
+style = "fg:#e0af68"
+format = "[$duration]($style)"
 
-[nodejs]
-symbol = " "
-style = "bold #5eead4"
-format = " [${symbol}${version}]($style)"
+[time]
+disabled = false
+time_format = "%R"
+format = "[[   $time ](fg:#a0a9cb)]($style)"
 
 [character]
-success_symbol = "[ ❯](bold #5eead4)"
-error_symbol = "[ ❯](bold #fb7185)"
+vimcmd_symbol = "[V](bold green) "
