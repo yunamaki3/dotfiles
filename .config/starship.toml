@@ -1,0 +1,31 @@
+format = "$directory$git_branch$git_status$c$nodejs$character"
+add_newline = true
+
+[directory]
+style = "bold #7dd3fc"
+truncation_length = 4
+truncate_to_repo = true
+
+[git_branch]
+symbol = "git "
+style = "#5eead4"
+format = "[$symbol$branch]($style) "
+
+[git_status]
+style = "#fbbf24"
+format = "([$all_status$ahead_behind]($style) )"
+
+[c]
+symbol = "C "
+style = "#7dd3fc"
+format = "[$symbol($version )]($style)"
+
+[nodejs]
+symbol = "node "
+style = "#5eead4"
+format = "[$symbol($version )]($style)"
+
+[character]
+success_symbol = "[❯](bold #5eead4)"
+error_symbol = "[❯](bold #fb7185)"
+
