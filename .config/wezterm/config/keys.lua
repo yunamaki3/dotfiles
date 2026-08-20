@@ -29,6 +29,7 @@ function M.apply(config)
     { key = "p", mods = "LEADER", action = act.ActivateTabRelative(-1) },
     { key = "x", mods = "LEADER", action = act.CloseCurrentPane({ confirm = true }) },
     { key = "z", mods = "LEADER", action = act.TogglePaneZoomState },
+    { key = "f", mods = "LEADER", action = act.ToggleFullScreen },
     { key = "[", mods = "LEADER", action = act.ActivateCopyMode },
     { key = "r", mods = "LEADER", action = act.ReloadConfiguration },
     { key = "q", mods = "LEADER", action = act.ActivateCommandPalette },
@@ -60,4 +61,3 @@ function M.apply(config)
 end
 
 return M
-

@@ -3,171 +3,244 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="color-scheme" content="dark">
-  <title>WezTerm &amp; LazyVim セットアップガイド</title>
+  <meta name="color-scheme" content="light">
+  <title>dotfiles セットアップ・操作ガイド</title>
   <style>
     :root {
-      --bg: #0b1220;
-      --surface: #111b2e;
-      --surface-2: #17243a;
-      --text: #d8dee9;
-      --muted: #94a3b8;
-      --cyan: #5eead4;
-      --blue: #7dd3fc;
-      --yellow: #fbbf24;
-      --border: #27364f;
-      --danger: #fb7185;
+      --bg: #fff;
+      --text: #1f2937;
+      --muted: #5f6b7a;
+      --line: #d9dee7;
+      --soft: #f6f8fa;
+      --accent: #1769aa;
+      --note: #eef6fc;
     }
     * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
     body {
       margin: 0;
       background: var(--bg);
       color: var(--text);
-      font-family: -apple-system, BlinkMacSystemFont, "Noto Sans JP", "Hiragino Sans", sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Yu Gothic UI", "Noto Sans JP", sans-serif;
+      font-size: 16px;
       line-height: 1.75;
     }
-    main { width: min(860px, calc(100% - 32px)); margin: 0 auto; padding: 56px 0 96px; }
-    header { margin-bottom: 48px; }
-    .eyebrow { color: var(--cyan); font: 700 13px/1.3 ui-monospace, monospace; letter-spacing: .12em; }
-    h1 { margin: 10px 0 12px; font-size: clamp(32px, 7vw, 54px); line-height: 1.12; letter-spacing: -.035em; }
-    h2 { margin: 0 0 18px; font-size: 23px; letter-spacing: -.02em; }
-    h3 { margin: 26px 0 8px; font-size: 17px; color: var(--blue); }
+    main { width: min(920px, calc(100% - 32px)); margin: 0 auto; padding: 48px 0 80px; }
+    header { padding-bottom: 28px; border-bottom: 2px solid var(--text); }
+    h1 { margin: 0 0 10px; font-size: clamp(30px, 6vw, 44px); line-height: 1.2; }
+    h2 { margin: 52px 0 14px; padding-bottom: 7px; border-bottom: 1px solid var(--line); font-size: 25px; }
+    h3 { margin: 28px 0 8px; font-size: 19px; }
     p { margin: 10px 0; }
-    .lead { max-width: 680px; color: var(--muted); font-size: 17px; }
-    section { margin: 20px 0; padding: 28px; background: var(--surface); border: 1px solid var(--border); border-radius: 16px; }
-    .step { display: grid; grid-template-columns: 38px 1fr; gap: 14px; align-items: start; }
-    .number { display: grid; place-items: center; width: 32px; height: 32px; border-radius: 9px; background: var(--cyan); color: var(--bg); font-weight: 800; }
-    .note { padding: 14px 16px; border-left: 3px solid var(--yellow); background: #1d2432; border-radius: 0 8px 8px 0; color: #f8dda0; }
-    .ok { border-left-color: var(--cyan); color: #a7f3d0; }
-    code { font-family: "FiraMono Nerd Font Mono", "SFMono-Regular", Consolas, monospace; }
-    .command { position: relative; margin: 14px 0; padding: 16px 52px 16px 16px; overflow-x: auto; background: #070d17; border: 1px solid var(--border); border-radius: 10px; color: #e2e8f0; white-space: pre; }
-    button { position: absolute; top: 9px; right: 9px; padding: 7px 10px; border: 1px solid var(--border); border-radius: 7px; background: var(--surface-2); color: var(--muted); cursor: pointer; }
-    button:hover { color: var(--cyan); border-color: var(--cyan); }
-    table { width: 100%; border-collapse: collapse; margin-top: 12px; }
-    th, td { padding: 11px 12px; border-bottom: 1px solid var(--border); text-align: left; }
-    th { color: var(--muted); font-size: 13px; }
-    kbd { padding: 3px 7px; border: 1px solid #475569; border-bottom-width: 2px; border-radius: 5px; background: #0f172a; font: 13px ui-monospace, monospace; }
-    a { color: var(--blue); }
-    .checklist { padding-left: 1.2em; }
-    .checklist li { margin: 6px 0; }
-    footer { margin-top: 36px; color: var(--muted); font-size: 13px; text-align: center; }
-    @media (max-width: 560px) {
-      main { padding-top: 32px; }
-      section { padding: 21px; border-radius: 12px; }
-      .step { grid-template-columns: 1fr; }
+    a { color: var(--accent); }
+    nav { margin: 24px 0 10px; padding: 18px 22px; background: var(--soft); border: 1px solid var(--line); }
+    nav strong { display: block; margin-bottom: 6px; }
+    nav ul { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); margin: 0; padding-left: 20px; }
+    .lead { color: var(--muted); font-size: 17px; }
+    .note { margin: 16px 0; padding: 13px 16px; background: var(--note); border-left: 4px solid var(--accent); }
+    .command {
+      position: relative;
+      margin: 12px 0 18px;
+      padding: 15px 74px 15px 16px;
+      overflow-x: auto;
+      background: var(--soft);
+      border: 1px solid var(--line);
+      white-space: pre;
+    }
+    code, kbd { font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace; }
+    button {
+      position: absolute;
+      top: 9px;
+      right: 9px;
+      padding: 6px 10px;
+      background: #fff;
+      border: 1px solid #aab3bf;
+      border-radius: 4px;
+      color: var(--text);
+      cursor: pointer;
+    }
+    table { width: 100%; margin: 14px 0 26px; border-collapse: collapse; }
+    th, td { padding: 10px 12px; border: 1px solid var(--line); text-align: left; vertical-align: top; }
+    th { background: var(--soft); }
+    kbd { display: inline-block; min-width: 24px; padding: 2px 6px; border: 1px solid #aab3bf; border-bottom-width: 2px; border-radius: 4px; background: #fff; text-align: center; }
+    li { margin: 5px 0; }
+    footer { margin-top: 56px; padding-top: 18px; border-top: 1px solid var(--line); color: var(--muted); font-size: 14px; }
+    @media (max-width: 620px) {
+      main { padding-top: 28px; }
+      nav ul { grid-template-columns: 1fr; }
+      table { display: block; overflow-x: auto; }
+    }
+    @media print {
+      main { width: 100%; padding: 0; }
+      nav, button { display: none; }
+      h2 { break-after: avoid; }
+      table, .command { break-inside: avoid; }
     }
   </style>
 </head>
 <body>
 <main>
   <header>
-    <div class="eyebrow">YUNAMAKI3 / DOTFILES</div>
-    <h1>WezTerm &amp; LazyVim<br>セットアップガイド</h1>
-    <p class="lead">macOS・Windows/WSLで、同じ見た目と操作感を使うための手順です。上から順番に進めれば大丈夫です。</p>
+    <h1>dotfiles セットアップ・操作ガイド</h1>
+    <p class="lead">WezTerm、Starship、LazyVimを導入・更新し、日常操作で迷わないための日本語ガイドです。</p>
   </header>
 
-  <section>
-    <div class="step">
-      <div class="number">1</div>
-      <div>
-        <h2>macOSのバージョンを確認</h2>
-        <p>Homebrewの現行版はmacOS Sonoma 14以降を正式サポートしています。最初に現在のバージョンを確認します。</p>
-        <div class="command"><code>sw_vers -productVersion</code><button type="button">コピー</button></div>
-        <p class="note">表示された先頭の数字が14未満の場合は、先にmacOSを更新するか、導入方法を調整する必要があります。</p>
-      </div>
-    </div>
+  <nav aria-label="目次">
+    <strong>目次</strong>
+    <ul>
+      <li><a href="#overview">構成</a></li>
+      <li><a href="#macos">macOSへの導入</a></li>
+      <li><a href="#windows">Windows・WSLへの導入</a></li>
+      <li><a href="#update">設定の更新</a></li>
+      <li><a href="#leader">Leaderキー</a></li>
+      <li><a href="#wezterm-keys">WezTermキーバインド</a></li>
+      <li><a href="#copy-mode">コピーモード</a></li>
+      <li><a href="#nvim">Neovim・LazyVim</a></li>
+      <li><a href="#trouble">トラブル対応</a></li>
+    </ul>
+  </nav>
+
+  <section id="overview">
+    <h2>1. このdotfilesの構成</h2>
+    <ul>
+      <li><strong>WezTerm：</strong>半透明のターミナル、ペイン分割、タブ操作、全画面切替</li>
+      <li><strong>Starship：</strong>現在のディレクトリ、Gitブランチ、変更状態、言語バージョンの表示</li>
+      <li><strong>LazyVim：</strong>C、Markdown、JSON、TypeScript、Tailwind CSS向けのNeovim環境</li>
+      <li><strong>セットアップスクリプト：</strong>設定ファイルを所定の場所へリンクし、既存設定をバックアップ</li>
+    </ul>
   </section>
 
-  <section>
-    <div class="step">
-      <div class="number">2</div>
-      <div>
-        <h2>開発用ツールをインストール</h2>
-        <p>GitやHomebrewの準備に必要です。次のコマンドを実行するとAppleのインストール画面が開きます。</p>
-        <div class="command"><code>xcode-select --install</code><button type="button">コピー</button></div>
-        <p>表示された画面でインストールを完了し、次で確認します。</p>
-        <div class="command"><code>xcode-select -p</code><button type="button">コピー</button></div>
-        <p class="note ok"><code>/Library/Developer/CommandLineTools</code> などのパスが表示されれば準備完了です。</p>
-      </div>
-    </div>
-  </section>
+  <section id="macos">
+    <h2>2. macOSへの導入</h2>
+    <h3>2-1. Command Line Tools</h3>
+    <div class="command"><code>xcode-select --install</code><button type="button">コピー</button></div>
 
-  <section>
-    <div class="step">
-      <div class="number">3</div>
-      <div>
-        <h2>Homebrewをインストール</h2>
-        <p><code>brew: command not found</code> は、Homebrewが未導入という意味です。公式のコマンドを実行してください。途中でMacのログインパスワードを求められることがあります。</p>
-        <div class="command"><code>/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"</code><button type="button">コピー</button></div>
-        <p>このMacはIntelモデルなので、通常は <code>/usr/local</code> に入ります。インストール後に新しいターミナルを開き、確認します。</p>
-        <div class="command"><code>brew --version</code><button type="button">コピー</button></div>
-        <p class="note">まだ見つからない場合は、Homebrewのインストール完了画面に表示された「Next steps」のコマンドをそのまま実行してください。</p>
-      </div>
-    </div>
-  </section>
+    <h3>2-2. Homebrewと必要なソフト</h3>
+    <p>Homebrewがない場合は、<a href="https://brew.sh/ja/">Homebrew公式サイト</a>の手順で導入します。その後、次を実行します。</p>
+    <div class="command"><code>brew install neovim starship ripgrep fd fzf llvm node
+brew install --cask font-fira-mono-nerd-font font-noto-sans-cjk</code><button type="button">コピー</button></div>
 
-  <section>
-    <div class="step">
-      <div class="number">4</div>
-      <div>
-        <h2>開発ツールとフォントを導入</h2>
-        <div class="command"><code>brew install neovim starship ripgrep fd fzf llvm node</code><button type="button">コピー</button></div>
-        <div class="command"><code>brew install --cask font-fira-mono-nerd-font font-noto-sans-cjk</code><button type="button">コピー</button></div>
-        <p>英数字とアイコンにはFiraMono Nerd Font Mono、日本語にはNoto Sans Mono CJK JPを使用します。</p>
-      </div>
-    </div>
-  </section>
-
-  <section>
-    <div class="step">
-      <div class="number">5</div>
-      <div>
-        <h2>dotfilesを取得して適用</h2>
-        <p>GitHubへの初期ファイル反映が完了した後、次のコマンドで取得できます。</p>
-        <div class="command"><code>git clone https://github.com/yunamaki3/dotfiles.git ~/dotfiles
+    <h3>2-3. dotfilesを取得して適用</h3>
+    <div class="command"><code>git clone https://github.com/yunamaki3/dotfiles.git ~/dotfiles
 cd ~/dotfiles
 ./scripts/setup-macos.sh</code><button type="button">コピー</button></div>
-        <p>WezTermを再起動し、<code>nvim</code> を実行します。最初の起動時だけLazyVimのプラグイン取得に少し時間がかかります。</p>
-      </div>
-    </div>
+    <p class="note">既存の通常ファイルは <code>~/.dotfiles-backup/日時</code> へ退避されます。適用後はWezTermを完全に終了して再起動してください。</p>
   </section>
 
-  <section>
-    <h2>操作早見表</h2>
+  <section id="windows">
+    <h2>3. Windows・WSLへの導入</h2>
+    <h3>3-1. Windows側</h3>
+    <div class="command"><code>winget install wez.wezterm
+powershell -ExecutionPolicy Bypass -File .\scripts\setup-windows.ps1</code><button type="button">コピー</button></div>
+    <p><code>FiraMono Nerd Font Mono</code> と <code>Noto Sans Mono CJK JP</code> もWindowsへインストールします。</p>
+
+    <h3>3-2. WSL側</h3>
+    <p>Neovim 0.11以降、Git、Clang、ripgrep、fd、Node.js、Starshipを導入し、リポジトリ内で実行します。</p>
+    <div class="command"><code>./scripts/setup-wsl.sh</code><button type="button">コピー</button></div>
+  </section>
+
+  <section id="update">
+    <h2>4. GitHubから設定を更新する</h2>
+    <p>実際に使用しているリポジトリで、次を実行します。</p>
+    <div class="command"><code>cd ~/dotfiles
+git pull origin main</code><button type="button">コピー</button></div>
+    <p>設定はリポジトリへシンボリックリンクされているため、通常はセットアップスクリプトの再実行は不要です。</p>
+    <ul>
+      <li>WezTerm設定の再読込：<code>Leader → r</code></li>
+      <li>Starship・シェル設定の再読込：<code>exec zsh</code></li>
+      <li>Neovim設定の反映：Neovimを終了して再起動</li>
+    </ul>
+  </section>
+
+  <section id="leader">
+    <h2>5. Leaderキーの押し方</h2>
+    <p>Leaderキーはショートカットの入口です。Leaderを押して離し、1.5秒以内に次のキーを押します。2つの操作は同時押しではありません。</p>
     <table>
-      <thead><tr><th>場所</th><th>キー</th><th>役割</th></tr></thead>
+      <thead><tr><th>環境</th><th>Leaderキー</th><th>例</th></tr></thead>
       <tbody>
-        <tr><td>WezTerm / Mac</td><td><kbd>Option</kbd> + <kbd>Q</kbd></td><td>Leader</td></tr>
-        <tr><td>WezTerm / Windows</td><td><kbd>Ctrl</kbd> + <kbd>Q</kbd></td><td>Leader</td></tr>
-        <tr><td>LazyVim</td><td><kbd>Space</kbd></td><td>Leader</td></tr>
-        <tr><td>WezTerm</td><td>Leader → <kbd>v</kbd> / <kbd>s</kbd></td><td>左右 / 上下に分割</td></tr>
-        <tr><td>WezTerm</td><td>Leader → <kbd>h</kbd><kbd>j</kbd><kbd>k</kbd><kbd>l</kbd></td><td>ペイン間を移動</td></tr>
-        <tr><td>WezTerm</td><td>Leader → <kbd>[</kbd></td><td>Vim風コピーモード</td></tr>
-        <tr><td>Cファイル</td><td><kbd>Space</kbd> → <kbd>c</kbd> → <kbd>r</kbd></td><td>保存・コンパイル・実行</td></tr>
+        <tr><td>WezTerm / macOS</td><td><kbd>Option</kbd> + <kbd>Q</kbd></td><td>全画面：Leaderの後に <kbd>f</kbd></td></tr>
+        <tr><td>WezTerm / Windows</td><td><kbd>Ctrl</kbd> + <kbd>Q</kbd></td><td>全画面：Leaderの後に <kbd>f</kbd></td></tr>
+        <tr><td>LazyVim</td><td><kbd>Space</kbd></td><td>C実行：<kbd>Space</kbd> → <kbd>c</kbd> → <kbd>r</kbd></td></tr>
       </tbody>
     </table>
   </section>
 
-  <section>
-    <h2>困ったとき</h2>
-    <ul class="checklist">
-      <li><code>brew: command not found</code>：手順3を完了し、新しいターミナルを開く。</li>
-      <li><code>git</code> が使えない：手順2のCommand Line Toolsを完了する。</li>
-      <li>文字やアイコンが崩れる：手順4のフォントを入れ、WezTermを完全に再起動する。</li>
-      <li>LazyVimが起動しない：<code>nvim --version</code> でNeovim 0.11以降か確認する。</li>
-    </ul>
+  <section id="wezterm-keys">
+    <h2>6. WezTermキーバインド</h2>
+    <p class="note"><strong>全画面表示：</strong>タイトルバーがなくても <code>Leader → f</code> で全画面のオン・オフを切り替えられます。WezTerm標準の <kbd>Alt</kbd> + <kbd>Enter</kbd> も使用できます。</p>
+    <table>
+      <thead><tr><th>Leaderの後に押すキー</th><th>操作</th><th>補足</th></tr></thead>
+      <tbody>
+        <tr><td><kbd>f</kbd></td><td>全画面表示を切り替える</td><td>もう一度押すと元へ戻る</td></tr>
+        <tr><td><kbd>v</kbd></td><td>左右にペイン分割</td><td>画面を縦線で分ける</td></tr>
+        <tr><td><kbd>s</kbd></td><td>上下にペイン分割</td><td>画面を横線で分ける</td></tr>
+        <tr><td><kbd>h</kbd> / <kbd>j</kbd> / <kbd>k</kbd> / <kbd>l</kbd></td><td>左 / 下 / 上 / 右へ移動</td><td>Vimと同じ方向</td></tr>
+        <tr><td><kbd>H</kbd> / <kbd>J</kbd> / <kbd>K</kbd> / <kbd>L</kbd></td><td>ペインを左 / 下 / 上 / 右へ拡縮</td><td>Shiftを使った大文字</td></tr>
+        <tr><td><kbd>c</kbd></td><td>新しいタブを作る</td><td>現在と同じドメインで開く</td></tr>
+        <tr><td><kbd>n</kbd> / <kbd>p</kbd></td><td>次 / 前のタブへ移動</td><td>next / previous</td></tr>
+        <tr><td><kbd>x</kbd></td><td>現在のペインを閉じる</td><td>確認画面が表示される</td></tr>
+        <tr><td><kbd>z</kbd></td><td>現在のペインを拡大・復元</td><td>分割状態は保持される</td></tr>
+        <tr><td><kbd>[</kbd></td><td>コピーモードを開始</td><td>キーボードで履歴を選択</td></tr>
+        <tr><td><kbd>r</kbd></td><td>設定を再読み込み</td><td>Lua変更後に使用</td></tr>
+        <tr><td><kbd>q</kbd></td><td>コマンドパレットを開く</td><td>利用可能な操作を検索</td></tr>
+      </tbody>
+    </table>
   </section>
 
-  <footer>このファイルは単体で保存・閲覧できます。外部CSSやJavaScriptは使用していません。</footer>
+  <section id="copy-mode">
+    <h2>7. コピーモード</h2>
+    <p><code>Leader → [</code> で開始し、次のキーで操作します。</p>
+    <table>
+      <thead><tr><th>キー</th><th>操作</th></tr></thead>
+      <tbody>
+        <tr><td><kbd>h</kbd> / <kbd>j</kbd> / <kbd>k</kbd> / <kbd>l</kbd></td><td>左 / 下 / 上 / 右へカーソル移動</td></tr>
+        <tr><td><kbd>w</kbd> / <kbd>b</kbd></td><td>次 / 前の単語へ移動</td></tr>
+        <tr><td><kbd>0</kbd> / <kbd>$</kbd></td><td>行頭 / 行末へ移動</td></tr>
+        <tr><td><kbd>g</kbd> / <kbd>G</kbd></td><td>スクロール履歴の先頭 / 末尾へ移動</td></tr>
+        <tr><td><kbd>v</kbd> / <kbd>V</kbd></td><td>文字単位 / 行単位の選択を開始</td></tr>
+        <tr><td><kbd>y</kbd></td><td>選択範囲をクリップボードへコピーして終了</td></tr>
+        <tr><td><kbd>Esc</kbd> / <kbd>q</kbd></td><td>コピーせず終了</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section id="nvim">
+    <h2>8. Neovim・LazyVim</h2>
+    <table>
+      <thead><tr><th>操作</th><th>役割</th></tr></thead>
+      <tbody>
+        <tr><td><code>:Lazy</code></td><td>プラグインの状態確認・更新</td></tr>
+        <tr><td><code>:Mason</code></td><td>LSP、フォーマッター、外部ツールの確認</td></tr>
+        <tr><td><code>:checkhealth</code></td><td>Neovim環境の問題を診断</td></tr>
+        <tr><td><kbd>Space</kbd> → <kbd>c</kbd> → <kbd>r</kbd></td><td>Cファイルを保存、厳格な警告付きでコンパイル、実行</td></tr>
+      </tbody>
+    </table>
+    <p>初回起動ではLazyVimのプラグインとMasonのツール取得に時間がかかります。処理中はNeovimを閉じず、完了後に一度再起動してください。</p>
+  </section>
+
+  <section id="trouble">
+    <h2>9. トラブル対応</h2>
+    <table>
+      <thead><tr><th>症状</th><th>確認・対処</th></tr></thead>
+      <tbody>
+        <tr><td>タイトルバーがなく全画面にできない</td><td><code>Leader → f</code>。または <kbd>Alt</kbd> + <kbd>Enter</kbd></td></tr>
+        <tr><td>設定変更が反映されない</td><td><code>git pull</code> 後、WezTermは <code>Leader → r</code>、シェルは <code>exec zsh</code></td></tr>
+        <tr><td>アイコンが四角や文字化けになる</td><td>Nerd Fontを導入し、WezTermを完全に再起動</td></tr>
+        <tr><td><code>Package is already installing</code></td><td>初回インストールの完了を待ち、Neovimを終了して再起動</td></tr>
+        <tr><td>LazyVimが起動しない</td><td><code>nvim --version</code> と <code>:checkhealth</code> を確認。Neovim 0.11以降を使用</td></tr>
+        <tr><td>変更をpullできない</td><td><code>git status</code> でローカル変更を確認。消してよいか不明な変更は削除しない</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <footer>外部CSSや外部JavaScriptを使わない、単一HTMLファイルです。ブラウザで直接開いて閲覧・印刷できます。</footer>
 </main>
 <script>
   document.querySelectorAll(".command button").forEach((button) => {
     button.addEventListener("click", async () => {
       const text = button.parentElement.querySelector("code").textContent;
       await navigator.clipboard.writeText(text);
-      const original = button.textContent;
       button.textContent = "コピー済み";
-      setTimeout(() => button.textContent = original, 1200);
+      setTimeout(() => { button.textContent = "コピー"; }, 1200);
     });
   });
 </script>
