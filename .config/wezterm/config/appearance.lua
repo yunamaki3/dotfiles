@@ -18,7 +18,7 @@ function M.apply(config)
     { family = "FiraMono Nerd Font Mono", weight = "Regular" },
     { family = "Noto Sans Mono CJK JP", weight = "Regular" },
   })
-  config.font_size = 13.0
+  config.font_size = 16.0
   config.line_height = 1.08
   config.cell_width = 1.0
 
@@ -57,4 +57,3 @@ end
 M.palette = palette
 
 return M
-
