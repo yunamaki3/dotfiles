@@ -1,10 +1,15 @@
-format = "$directory$git_branch$git_status$c$nodejs$character"
+format = "[](#7dd3fc)$directory[](#7dd3fc) $git_branch$git_status$c$nodejs$character"
 add_newline = true
 
 [directory]
-style = "bold #7dd3fc"
+format = "[ 󰉋  $path$read_only ]($style)"
+style = "bold fg:#0b1220 bg:#7dd3fc"
+read_only = " 󰌾"
+read_only_style = "bold fg:#0b1220 bg:#7dd3fc"
 truncation_length = 4
 truncate_to_repo = true
+truncation_symbol = "…/"
+home_symbol = "󰋜 ~"
 
 [git_branch]
 symbol = "git "
@@ -28,4 +33,3 @@ format = "[$symbol($version )]($style)"
 [character]
 success_symbol = "[❯](bold #5eead4)"
 error_symbol = "[❯](bold #fb7185)"
-
