@@ -17,7 +17,7 @@ Apple Command Line Toolsと必要なパッケージを入れます。
 
 ```sh
 xcode-select --install
-brew install neovim starship ripgrep fd fzf llvm node
+brew install neovim starship ripgrep fd fzf llvm node zsh-autosuggestions
 brew install --cask font-fira-mono-nerd-font font-noto-sans-cjk
 ```
 
@@ -46,7 +46,13 @@ Windowsに `FiraMono Nerd Font Mono` と `Noto Sans Mono CJK JP` をインスト
 ./scripts/setup-wsl.sh
 ```
 
-WSL側にはNeovim 0.11以降、Git、Clang、ripgrep、fd、Node.js、Starshipが必要です。
+WSL側にはNeovim 0.11以降、Git、Clang、ripgrep、fd、Node.js、Starship、zsh、zsh-autosuggestionsが必要です。
+
+## Neovimファイルツリー
+
+Neo-treeを使用します。<kbd>Ctrl</kbd> + <kbd>N</kbd> または `Space → e` で開閉し、ツリー内の `?` で全操作を確認できます。コマンドからは `:Neotree toggle` で開閉できます。
+
+Neovimで利用できる検索、編集、LSP、Git、ターミナル、Neo-treeの操作は [`SETUP.html`](./SETUP.html) にまとめています。
 
 ## Leaderキーの使い方
 

@@ -25,5 +25,25 @@ if ! grep -q 'starship init zsh' "$HOME/.zshrc" 2>/dev/null; then
   printf '\neval "$(starship init zsh)"\n' >> "$HOME/.zshrc"
 fi
 
-printf 'WSL config links installed. Install Neovim 0.11+, git, clang, ripgrep, fd, node and starship.\n'
+if ! grep -q 'dotfiles shell completion' "$HOME/.zshrc" 2>/dev/null; then
+  cat >> "$HOME/.zshrc" <<'EOF'
 
+# dotfiles shell completion
+autoload -Uz compinit
+compinit
+zstyle ':completion:*' menu select
+setopt AUTO_CD AUTO_LIST COMPLETE_IN_WORD
+ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=8'
+for autosuggest_file in \
+  /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh \
+  /home/linuxbrew/.linuxbrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh; do
+  if [[ -r "$autosuggest_file" ]]; then
+    source "$autosuggest_file"
+    break
+  fi
+done
+unset autosuggest_file
+EOF
+fi
+
+printf 'WSL config links installed. Install Neovim 0.11+, git, clang, ripgrep, fd, node, starship and zsh-autosuggestions.\n'

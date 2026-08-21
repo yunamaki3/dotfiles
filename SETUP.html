@@ -91,6 +91,7 @@
       <li><a href="#macos">macOSへの導入</a></li>
       <li><a href="#windows">Windows・WSLへの導入</a></li>
       <li><a href="#update">設定の更新</a></li>
+      <li><a href="#shell-completion">シェル入力補助</a></li>
       <li><a href="#leader">Leaderキー</a></li>
       <li><a href="#wezterm-keys">WezTermキーバインド</a></li>
       <li><a href="#copy-mode">コピーモード</a></li>
@@ -116,7 +117,7 @@
 
     <h3>2-2. Homebrewと必要なソフト</h3>
     <p>Homebrewがない場合は、<a href="https://brew.sh/ja/">Homebrew公式サイト</a>の手順で導入します。その後、次を実行します。</p>
-    <div class="command"><code>brew install neovim starship ripgrep fd fzf llvm node
+    <div class="command"><code>brew install neovim starship ripgrep fd fzf llvm node zsh-autosuggestions
 brew install --cask font-fira-mono-nerd-font font-noto-sans-cjk</code><button type="button">コピー</button></div>
 
     <h3>2-3. dotfilesを取得して適用</h3>
@@ -134,7 +135,7 @@ powershell -ExecutionPolicy Bypass -File .\scripts\setup-windows.ps1</code><butt
     <p><code>FiraMono Nerd Font Mono</code> と <code>Noto Sans Mono CJK JP</code> もWindowsへインストールします。</p>
 
     <h3>3-2. WSL側</h3>
-    <p>Neovim 0.11以降、Git、Clang、ripgrep、fd、Node.js、Starshipを導入し、リポジトリ内で実行します。</p>
+    <p>Neovim 0.11以降、Git、Clang、ripgrep、fd、Node.js、Starship、zsh、zsh-autosuggestionsを導入し、リポジトリ内で実行します。</p>
     <div class="command"><code>./scripts/setup-wsl.sh</code><button type="button">コピー</button></div>
   </section>
 
@@ -151,8 +152,22 @@ git pull origin main</code><button type="button">コピー</button></div>
     </ul>
   </section>
 
+  <section id="shell-completion">
+    <h2>5. WezTerm上の入力候補</h2>
+    <p>候補表示はWezTermではなく、内部で動くzshまたはPowerShellが担当します。セットアップスクリプトを再実行した後、新しいシェルを開いてください。</p>
+    <table>
+      <thead><tr><th>操作</th><th>結果</th></tr></thead>
+      <tbody>
+        <tr><td><code>cd Doc</code> の途中で <kbd>Tab</kbd></td><td>一致するディレクトリやファイル候補を表示。Tabまたは矢印で選択</td></tr>
+        <tr><td>薄い履歴候補が表示された状態で <kbd>→</kbd></td><td>zsh-autosuggestionsまたはPSReadLineの候補を採用</td></tr>
+        <tr><td>ディレクトリ名だけ入力</td><td>zshの <code>AUTO_CD</code> により、そのディレクトリへ移動</td></tr>
+        <tr><td><code>exec zsh</code></td><td>zsh設定を再読み込み</td></tr>
+      </tbody>
+    </table>
+  </section>
+
   <section id="leader">
-    <h2>5. Leaderキーの押し方</h2>
+    <h2>6. Leaderキーの押し方</h2>
     <p>Leaderキーはショートカットの入口です。Leaderを押して離し、1.5秒以内に次のキーを押します。2つの操作は同時押しではありません。</p>
     <table>
       <thead><tr><th>環境</th><th>Leaderキー</th><th>例</th></tr></thead>
@@ -165,7 +180,7 @@ git pull origin main</code><button type="button">コピー</button></div>
   </section>
 
   <section id="wezterm-keys">
-    <h2>6. WezTermキーバインド</h2>
+    <h2>7. WezTermキーバインド</h2>
     <p class="note"><strong>全画面表示：</strong>タイトルバーがなくても <code>Leader → f</code> で全画面のオン・オフを切り替えられます。WezTerm標準の <kbd>Alt</kbd> + <kbd>Enter</kbd> も使用できます。</p>
     <table>
       <thead><tr><th>Leaderの後に押すキー</th><th>操作</th><th>補足</th></tr></thead>
@@ -187,7 +202,7 @@ git pull origin main</code><button type="button">コピー</button></div>
   </section>
 
   <section id="copy-mode">
-    <h2>7. コピーモード</h2>
+    <h2>8. コピーモード</h2>
     <p><code>Leader → [</code> で開始し、次のキーで操作します。</p>
     <table>
       <thead><tr><th>キー</th><th>操作</th></tr></thead>
@@ -204,27 +219,146 @@ git pull origin main</code><button type="button">コピー</button></div>
   </section>
 
   <section id="nvim">
-    <h2>8. Neovim・LazyVim</h2>
+    <h2>9. Neovim・LazyVim</h2>
+    <p class="note"><strong>ファイルツリーを開く基本操作：</strong><kbd>Ctrl</kbd> + <kbd>N</kbd> または <kbd>Space</kbd> → <kbd>e</kbd> です。コマンドでは <code>:Neotree toggle</code> を使います。ツリー内で <kbd>?</kbd> を押すと、その場で利用可能な全キーを確認できます。</p>
+
+    <h3>9-1. モードと基本操作</h3>
+    <table>
+      <thead><tr><th>操作</th><th>できること</th></tr></thead>
+      <tbody>
+        <tr><td><kbd>i</kbd> / <kbd>a</kbd></td><td>カーソル位置の前 / 後ろから文字入力を開始</td></tr>
+        <tr><td><kbd>Esc</kbd> または <kbd>j</kbd><kbd>j</kbd></td><td>挿入モードを終了してノーマルモードへ戻る</td></tr>
+        <tr><td><kbd>v</kbd> / <kbd>V</kbd> / <kbd>Ctrl</kbd>+<kbd>v</kbd></td><td>文字 / 行 / 矩形単位の選択</td></tr>
+        <tr><td><kbd>:</kbd></td><td>コマンドラインを開く</td></tr>
+        <tr><td><kbd>u</kbd> / <kbd>Ctrl</kbd>+<kbd>r</kbd></td><td>元に戻す / やり直す</td></tr>
+        <tr><td><kbd>y</kbd> / <kbd>p</kbd></td><td>選択範囲などをコピー / 貼り付け。OSクリップボードと連動</td></tr>
+        <tr><td><kbd>d</kbd><kbd>d</kbd> / <kbd>c</kbd><kbd>i</kbd><kbd>w</kbd></td><td>現在行を削除 / 単語の中身を変更</td></tr>
+        <tr><td><kbd>.</kbd></td><td>直前の編集操作を繰り返す</td></tr>
+        <tr><td><kbd>g</kbd><kbd>c</kbd><kbd>c</kbd></td><td>現在行をコメント化・解除。選択後の <kbd>g</kbd><kbd>c</kbd> で範囲コメント</td></tr>
+        <tr><td><kbd>g</kbd><kbd>s</kbd><kbd>a</kbd> / <kbd>g</kbd><kbd>s</kbd><kbd>d</kbd> / <kbd>g</kbd><kbd>s</kbd><kbd>r</kbd></td><td>括弧や引用符の追加 / 削除 / 置換</td></tr>
+        <tr><td><kbd>Space</kbd>を押して待つ</td><td>Which-keyで利用可能なLeader操作を表示</td></tr>
+      </tbody>
+    </table>
+
+    <h3>9-2. Neo-treeファイルツリー</h3>
+    <table>
+      <thead><tr><th>場所・操作</th><th>できること</th></tr></thead>
+      <tbody>
+        <tr><td><kbd>Ctrl</kbd>+<kbd>N</kbd></td><td>プロジェクトルートのツリーを開閉</td></tr>
+        <tr><td><kbd>Space</kbd> → <kbd>e</kbd> / <kbd>Space</kbd> → <kbd>f</kbd> → <kbd>e</kbd></td><td>プロジェクトルートのツリーを開閉</td></tr>
+        <tr><td><kbd>Space</kbd> → <kbd>E</kbd></td><td>現在の作業ディレクトリを基準にツリーを開閉</td></tr>
+        <tr><td><kbd>Space</kbd> → <kbd>g</kbd> → <kbd>e</kbd></td><td>Git状態を中心にしたツリーを表示</td></tr>
+        <tr><td><kbd>Space</kbd> → <kbd>b</kbd> → <kbd>e</kbd></td><td>開いているバッファのツリーを表示</td></tr>
+        <tr><td><code>:Neotree toggle</code> / <code>:Neotree reveal</code></td><td>コマンドで開閉 / 現在のファイル位置を表示</td></tr>
+        <tr><td>ツリー内 <kbd>Enter</kbd> または <kbd>l</kbd></td><td>ファイルを開く、ディレクトリを展開</td></tr>
+        <tr><td>ツリー内 <kbd>h</kbd> / <kbd>Backspace</kbd></td><td>ノードを閉じる / 1つ上の階層へ移動</td></tr>
+        <tr><td>ツリー内 <kbd>s</kbd> / <kbd>S</kbd></td><td>垂直分割 / 水平分割でファイルを開く</td></tr>
+        <tr><td>ツリー内 <kbd>a</kbd> / <kbd>A</kbd></td><td>新しいファイル / ディレクトリを作成</td></tr>
+        <tr><td>ツリー内 <kbd>r</kbd> / <kbd>d</kbd></td><td>名前変更 / 削除</td></tr>
+        <tr><td>ツリー内 <kbd>y</kbd> / <kbd>x</kbd> / <kbd>p</kbd></td><td>ファイルをコピー / 切り取り / 貼り付け</td></tr>
+        <tr><td>ツリー内 <kbd>c</kbd> / <kbd>m</kbd></td><td>指定先へコピー / 移動</td></tr>
+        <tr><td>ツリー内 <kbd>H</kbd> / <kbd>/</kbd></td><td>隠しファイル表示を切替 / ファイル名で絞り込み</td></tr>
+        <tr><td>ツリー内 <kbd>P</kbd> / <kbd>O</kbd> / <kbd>Y</kbd></td><td>プレビュー / OSアプリで開く / 絶対パスをコピー</td></tr>
+        <tr><td>ツリー内 <kbd>q</kbd> / <kbd>?</kbd></td><td>ツリーを閉じる / Neo-treeの全キーヘルプを表示</td></tr>
+      </tbody>
+    </table>
+
+    <h3>9-3. ファイル・検索・履歴</h3>
+    <table>
+      <thead><tr><th>操作</th><th>できること</th></tr></thead>
+      <tbody>
+        <tr><td><kbd>Space</kbd> → <kbd>Space</kbd> または <kbd>Space</kbd> → <kbd>f</kbd> → <kbd>f</kbd></td><td>プロジェクト内のファイルを名前で検索</td></tr>
+        <tr><td><kbd>Space</kbd> → <kbd>f</kbd> → <kbd>F</kbd></td><td>現在の作業ディレクトリからファイル検索</td></tr>
+        <tr><td><kbd>Space</kbd> → <kbd>f</kbd> → <kbd>g</kbd></td><td>Git管理対象のファイルだけを検索</td></tr>
+        <tr><td><kbd>Space</kbd> → <kbd>f</kbd> → <kbd>r</kbd></td><td>最近開いたファイルを検索</td></tr>
+        <tr><td><kbd>Space</kbd> → <kbd>/</kbd> または <kbd>Space</kbd> → <kbd>s</kbd> → <kbd>g</kbd></td><td>プロジェクト全体をripgrepで全文検索</td></tr>
+        <tr><td><kbd>Space</kbd> → <kbd>s</kbd> → <kbd>G</kbd></td><td>現在の作業ディレクトリを全文検索</td></tr>
+        <tr><td><kbd>Space</kbd> → <kbd>s</kbd> → <kbd>w</kbd></td><td>カーソル上の単語または選択範囲を検索</td></tr>
+        <tr><td><kbd>/</kbd>文字列<kbd>Enter</kbd>、<kbd>n</kbd> / <kbd>N</kbd></td><td>現在のファイル内を検索し、次 / 前の一致へ移動</td></tr>
+        <tr><td><kbd>Esc</kbd> または <kbd>Esc</kbd>を2回</td><td>検索ハイライトを消す</td></tr>
+        <tr><td><kbd>Space</kbd> → <kbd>s</kbd> → <kbd>k</kbd></td><td>現在有効なキーマップを検索</td></tr>
+        <tr><td><kbd>Space</kbd> → <kbd>s</kbd> → <kbd>h</kbd></td><td>Neovimのヘルプを検索</td></tr>
+        <tr><td><kbd>Space</kbd> → <kbd>:</kbd></td><td>コマンド履歴を検索</td></tr>
+      </tbody>
+    </table>
+
+    <h3>9-4. 保存・バッファ・分割・タブ</h3>
+    <table>
+      <thead><tr><th>操作</th><th>できること</th></tr></thead>
+      <tbody>
+        <tr><td><kbd>Ctrl</kbd>+<kbd>s</kbd> または <code>:w</code></td><td>現在のファイルを保存</td></tr>
+        <tr><td><code>:q</code> / <code>:wq</code> / <code>:q!</code></td><td>終了 / 保存して終了 / 変更を破棄して終了</td></tr>
+        <tr><td><kbd>Shift</kbd>+<kbd>h</kbd> / <kbd>Shift</kbd>+<kbd>l</kbd></td><td>前 / 次のバッファへ移動</td></tr>
+        <tr><td><kbd>Space</kbd> → <kbd>,</kbd> または <kbd>Space</kbd> → <kbd>f</kbd> → <kbd>b</kbd></td><td>開いているバッファ一覧から選択</td></tr>
+        <tr><td><kbd>Space</kbd> → <kbd>b</kbd> → <kbd>d</kbd></td><td>現在のバッファを閉じる</td></tr>
+        <tr><td><kbd>Space</kbd> → <kbd>b</kbd> → <kbd>o</kbd></td><td>現在以外のバッファを閉じる</td></tr>
+        <tr><td><kbd>Space</kbd> → <kbd>-</kbd> / <kbd>Space</kbd> → <kbd>|</kbd></td><td>下 / 右へウィンドウ分割</td></tr>
+        <tr><td><kbd>Ctrl</kbd>+<kbd>h</kbd>/<kbd>j</kbd>/<kbd>k</kbd>/<kbd>l</kbd></td><td>左 / 下 / 上 / 右の分割ウィンドウへ移動</td></tr>
+        <tr><td><kbd>Ctrl</kbd>+矢印</td><td>分割ウィンドウの幅・高さを調整</td></tr>
+        <tr><td><kbd>Space</kbd> → <kbd>w</kbd> → <kbd>d</kbd></td><td>現在の分割ウィンドウを閉じる</td></tr>
+        <tr><td><kbd>Space</kbd> → <kbd>w</kbd> → <kbd>m</kbd></td><td>現在のウィンドウを一時的に最大化・復元</td></tr>
+        <tr><td><kbd>Space</kbd> → <kbd>Tab</kbd> → <kbd>Tab</kbd></td><td>新しいNeovimタブを作成</td></tr>
+        <tr><td><kbd>Space</kbd> → <kbd>Tab</kbd> → <kbd>[</kbd> / <kbd>]</kbd></td><td>前 / 次のNeovimタブへ移動</td></tr>
+      </tbody>
+    </table>
+
+    <h3>9-5. コード補完・LSP・診断・整形</h3>
+    <table>
+      <thead><tr><th>操作</th><th>できること</th></tr></thead>
+      <tbody>
+        <tr><td>挿入モードで入力</td><td>Blink.cmpがLSP、バッファ、パス、スニペット候補を表示</td></tr>
+        <tr><td><kbd>Ctrl</kbd>+<kbd>Space</kbd></td><td>補完候補を手動表示</td></tr>
+        <tr><td><kbd>Tab</kbd> / <kbd>Shift</kbd>+<kbd>Tab</kbd>、<kbd>Enter</kbd></td><td>補完候補を次 / 前へ移動し、確定</td></tr>
+        <tr><td><kbd>g</kbd><kbd>d</kbd> / <kbd>g</kbd><kbd>r</kbd></td><td>定義へ移動 / 参照一覧を表示</td></tr>
+        <tr><td><kbd>g</kbd><kbd>I</kbd> / <kbd>g</kbd><kbd>y</kbd> / <kbd>g</kbd><kbd>D</kbd></td><td>実装 / 型定義 / 宣言へ移動</td></tr>
+        <tr><td><kbd>K</kbd> / <kbd>g</kbd><kbd>K</kbd></td><td>型・ドキュメント / 関数シグネチャを表示</td></tr>
+        <tr><td><kbd>Space</kbd> → <kbd>c</kbd> → <kbd>a</kbd></td><td>利用可能なコードアクションを表示</td></tr>
+        <tr><td><kbd>Space</kbd> → <kbd>c</kbd> → <kbd>r</kbd></td><td>通常はシンボル名変更。Cファイルではこのdotfiles独自の保存・コンパイル・実行</td></tr>
+        <tr><td><kbd>Space</kbd> → <kbd>c</kbd> → <kbd>f</kbd></td><td>現在のファイルまたは選択範囲を整形</td></tr>
+        <tr><td><kbd>Space</kbd> → <kbd>c</kbd> → <kbd>d</kbd></td><td>カーソル行の診断内容を表示</td></tr>
+        <tr><td><kbd>]</kbd><kbd>d</kbd> / <kbd>[</kbd><kbd>d</kbd></td><td>次 / 前の診断へ移動</td></tr>
+        <tr><td><kbd>]</kbd><kbd>e</kbd> / <kbd>[</kbd><kbd>e</kbd></td><td>次 / 前のエラーへ移動</td></tr>
+        <tr><td><kbd>Space</kbd> → <kbd>x</kbd> → <kbd>x</kbd></td><td>プロジェクト全体の診断をTroubleで表示</td></tr>
+        <tr><td><kbd>Space</kbd> → <kbd>c</kbd> → <kbd>s</kbd></td><td>ファイル内のシンボル一覧を表示</td></tr>
+        <tr><td><code>:LspInfo</code> / <code>:checkhealth vim.lsp</code></td><td>LSP接続状態を確認 / 診断</td></tr>
+      </tbody>
+    </table>
+
+    <h3>9-6. Git・ターミナル・管理コマンド</h3>
     <table>
       <thead><tr><th>操作</th><th>役割</th></tr></thead>
       <tbody>
+        <tr><td><kbd>Space</kbd> → <kbd>g</kbd> → <kbd>s</kbd></td><td>Gitで変更されたファイル一覧</td></tr>
+        <tr><td><kbd>Space</kbd> → <kbd>g</kbd> → <kbd>d</kbd></td><td>Git差分のhunk一覧</td></tr>
+        <tr><td><kbd>Space</kbd> → <kbd>g</kbd> → <kbd>l</kbd></td><td>Gitログを表示</td></tr>
+        <tr><td><kbd>Space</kbd> → <kbd>g</kbd> → <kbd>b</kbd></td><td>現在行のGit blameを表示</td></tr>
+        <tr><td><kbd>]</kbd><kbd>h</kbd> / <kbd>[</kbd><kbd>h</kbd></td><td>次 / 前の変更hunkへ移動</td></tr>
+        <tr><td><kbd>Space</kbd> → <kbd>g</kbd> → <kbd>g</kbd></td><td>lazygitがインストール済みなら、プロジェクトのlazygitを開く</td></tr>
+        <tr><td><kbd>Ctrl</kbd>+<kbd>/</kbd></td><td>プロジェクトルートのフローティングターミナルを開閉</td></tr>
+        <tr><td><kbd>Space</kbd> → <kbd>f</kbd> → <kbd>t</kbd> / <kbd>T</kbd></td><td>プロジェクトルート / 現在のディレクトリでターミナルを開く</td></tr>
         <tr><td><code>:Lazy</code></td><td>プラグインの状態確認・更新</td></tr>
         <tr><td><code>:Mason</code></td><td>LSP、フォーマッター、外部ツールの確認</td></tr>
-        <tr><td><code>:checkhealth</code></td><td>Neovim環境の問題を診断</td></tr>
+        <tr><td><code>:checkhealth</code> / <code>:checkhealth neo-tree</code></td><td>Neovim全体 / Neo-treeの問題を診断</td></tr>
+        <tr><td><code>:TSUpdate</code></td><td>Tree-sitterパーサーを更新</td></tr>
+        <tr><td><kbd>Space</kbd> → <kbd>u</kbd> → <kbd>w</kbd></td><td>行の折り返し表示を切替</td></tr>
+        <tr><td><kbd>Space</kbd> → <kbd>u</kbd> → <kbd>C</kbd></td><td>カラースキームを一覧から選択</td></tr>
         <tr><td><kbd>Space</kbd> → <kbd>c</kbd> → <kbd>r</kbd></td><td>Cファイルを保存、厳格な警告付きでコンパイル、実行</td></tr>
+        <tr><td><kbd>Space</kbd> → <kbd>q</kbd> → <kbd>q</kbd></td><td>Neovimをすべて終了</td></tr>
       </tbody>
     </table>
-    <p>初回起動ではLazyVimのプラグインとMasonのツール取得に時間がかかります。処理中はNeovimを閉じず、完了後に一度再起動してください。</p>
+    <p>初回起動ではLazyVim、Neo-tree、Catppuccin、Masonツールの取得に時間がかかります。処理中はNeovimを閉じず、完了後に一度再起動してください。キーマップはプラグインやファイル形式により増減するため、迷った場合は <kbd>Space</kbd> を押してWhich-keyを見るか、<kbd>Space</kbd> → <kbd>s</kbd> → <kbd>k</kbd> で現在有効なキーを検索するのが最も確実です。</p>
   </section>
 
   <section id="trouble">
-    <h2>9. トラブル対応</h2>
+    <h2>10. トラブル対応</h2>
     <table>
       <thead><tr><th>症状</th><th>確認・対処</th></tr></thead>
       <tbody>
         <tr><td>タイトルバーがなく全画面にできない</td><td><code>Leader → f</code>。または <kbd>Alt</kbd> + <kbd>Enter</kbd></td></tr>
         <tr><td>設定変更が反映されない</td><td><code>git pull</code> 後、WezTermは <code>Leader → r</code>、シェルは <code>exec zsh</code></td></tr>
+        <tr><td><code>cd</code> の候補が表示されない</td><td>zsh-autosuggestionsをインストールし、セットアップスクリプトを再実行して <code>exec zsh</code>。候補の採用は右矢印</td></tr>
         <tr><td>アイコンが四角や文字化けになる</td><td>Nerd Fontを導入し、WezTermを完全に再起動</td></tr>
+        <tr><td>Neo-treeが開かない</td><td><code>:Lazy sync</code> 後に再起動し、<code>:checkhealth neo-tree</code> を確認</td></tr>
         <tr><td><code>Package is already installing</code></td><td>初回インストールの完了を待ち、Neovimを終了して再起動</td></tr>
         <tr><td>LazyVimが起動しない</td><td><code>nvim --version</code> と <code>:checkhealth</code> を確認。Neovim 0.11以降を使用</td></tr>
         <tr><td>変更をpullできない</td><td><code>git status</code> でローカル変更を確認。消してよいか不明な変更は削除しない</td></tr>

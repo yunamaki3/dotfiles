@@ -22,10 +22,11 @@ require("lazy").setup({
     { import = "lazyvim.plugins.extras.lang.json" },
     { import = "lazyvim.plugins.extras.lang.typescript" },
     { import = "lazyvim.plugins.extras.lang.tailwind" },
+    { import = "lazyvim.plugins.extras.editor.neo-tree" },
     { import = "plugins" },
   },
   defaults = { lazy = false, version = false },
-  install = { colorscheme = { "tokyonight", "habamax" } },
+  install = { colorscheme = { "catppuccin", "habamax" } },
   checker = { enabled = true, notify = false },
   change_detection = { notify = false },
   performance = {
@@ -34,4 +35,3 @@ require("lazy").setup({
     },
   },
 })
-

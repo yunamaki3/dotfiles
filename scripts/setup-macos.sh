@@ -25,7 +25,27 @@ if ! grep -q 'starship init zsh' "$HOME/.zshrc" 2>/dev/null; then
   printf '\neval "$(starship init zsh)"\n' >> "$HOME/.zshrc"
 fi
 
-printf 'Config links installed. Install packages with:\n'
-printf '  brew install neovim starship ripgrep fd fzf llvm node\n'
-printf '  brew install --cask font-fira-mono-nerd-font font-noto-sans-cjk\n'
+if ! grep -q 'dotfiles shell completion' "$HOME/.zshrc" 2>/dev/null; then
+  cat >> "$HOME/.zshrc" <<'EOF'
 
+# dotfiles shell completion
+autoload -Uz compinit
+compinit
+zstyle ':completion:*' menu select
+setopt AUTO_CD AUTO_LIST COMPLETE_IN_WORD
+ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=8'
+for autosuggest_file in \
+  /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh \
+  /usr/local/share/zsh-autosuggestions/zsh-autosuggestions.zsh; do
+  if [[ -r "$autosuggest_file" ]]; then
+    source "$autosuggest_file"
+    break
+  fi
+done
+unset autosuggest_file
+EOF
+fi
+
+printf 'Config links installed. Install packages with:\n'
+printf '  brew install neovim starship ripgrep fd fzf llvm node zsh-autosuggestions\n'
+printf '  brew install --cask font-fira-mono-nerd-font font-noto-sans-cjk\n'
