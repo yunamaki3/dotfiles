@@ -2,4 +2,15 @@
 *.swp
 *.swo
 lazy-lock.json
+!profiles/windows-wsl/nvim/lazy-lock.json
+.env
+.env.*
+!.env.example
+*.local
+local.lua
+*.bak*
+*.log
+keylog.txt
+*_history
+.dotfiles-backup/
 

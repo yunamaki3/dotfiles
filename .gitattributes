@@ -1,0 +1,5 @@
+scripts/*current*.sh text eol=lf
+profiles/windows-wsl/**/*.lua text eol=lf
+profiles/windows-wsl/**/*.json text eol=lf
+profiles/windows-wsl/*.toml text eol=lf
+profiles/windows-wsl/shell/* text eol=lf

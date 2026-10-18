@@ -1,5 +1,15 @@
 # yunamaki3/dotfiles
 
+## 現在のWindows PCの環境を別のWindows PCへ移す
+
+**[Windows＋WSL専用の導入手順はこちら](./WINDOWS-WSL.md)**。
+2026-10-19に実機から収録したWezTerm・zshの予測補完・Starship・Neovim設定は `profiles/windows-wsl/` にあります。
+フォントと依存ツールの導入、バックアップ付き設定適用、プラグインのバージョン固定に対応しています。
+
+以下の説明と `SETUP.html` は従来のmacOS／LazyVimプロファイル用です。現在のWindows環境（WezTerm Leader: `Ctrl+;`）を再現するときは上記の専用手順を使ってください。
+
+---
+
 macOS・Windows/WSLで、WezTerm・Starship・LazyVimを同じ見た目と操作感で使うための設定ファイルです。
 
 詳しい導入手順とキーバインドは、白背景の単一HTMLガイド [`SETUP.html`](./SETUP.html) にまとめています。
