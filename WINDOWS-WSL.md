@@ -1,6 +1,6 @@
 # 今のWindows PCと同じ環境を別PCへ導入する
 
-2026-10-19に稼働中の設定から収録した `profiles/windows-wsl/` 用の手順です。
+2026-11-13に稼働中の設定から収録した `profiles/windows-wsl/` 用の手順です。
 WindowsのWezTermからWSL Ubuntuのzshを開き、その中でNeovimを使います。
 既存の `.config/` は別のLazyVimプロファイルなので混ぜないでください。
 
@@ -57,7 +57,7 @@ nvim
 
 初回のTreesitterパーサー構築には時間がかかります。Neovim内で `:TSUpdateSync` を実行し、必要なら再起動してください。`:checkhealth` で状態を確認できます。
 
-Ubuntu 24.04を基準にしています。依存スクリプトはaptのツール、Neovim 0.12.3、Starship 1.26.0、TypeScript 5.9.2、typescript-language-server 4.4.1を導入します。NeovimとStarshipは公式リリースからLinuxホームへ配置し、npmは専用ディレクトリを使います。x86_64 / ARM64の配布名に対応していますが、実機検証はx86_64です。
+Ubuntu 24.04を基準にしています。依存スクリプトはaptのツール、Neovim 0.12.3、Starship 1.26.0、TypeScript 5.9.2、typescript-language-server 4.4.1、Pyright 1.1.414、Go 1.27.3、gopls 0.24.0を導入します。NeovimとStarshipは公式リリースからLinuxホームへ配置し、npmは専用ディレクトリを使います。x86_64 / ARM64の配布名に対応していますが、実機検証はx86_64です。
 
 WSLの既定ログインシェルは変更せず、WezTermから `zsh -l` を起動します。通常のUbuntuウィンドウでもzshにしたければ `chsh -s /usr/bin/zsh` を実行し、Ubuntuを開き直してください。
 
@@ -70,7 +70,7 @@ WSLの既定ログインシェルは変更せず、WezTermから `zsh -l` を起
 | zsh | 履歴共有・重複除去、Tab補完、zsh-autosuggestions、ディレクトリ名だけでcd |
 | Starship | 水色のディレクトリ表示、Git表示、右側に実行時間・ユーザー名・時計 |
 | Neovim | Catppuccin mocha透明背景、Neo-tree、Telescope、Treesitter、LSP、nvim-cmp、vsnip、画面装飾、独自キーマップ |
-| LSP | C/C++はclangd、JavaScript/TypeScriptはts_ls |
+| LSP | Pythonはpyright、C/C++はclangd、JavaScript/TypeScriptはts_ls、Goはgopls |
 | バージョン固定 | `lazy-lock.json` に現在のプラグインコミットを保存、lazy.nvim本体も初回に固定コミットへcheckout |
 | Bash | 現在の `.bashrc` / `.profile` も収録。ユーザー名の絶対パスを `$HOME` に変更 |
 
@@ -105,6 +105,21 @@ WezTermのLeaderは **Ctrl + ;**。押して離してから2秒以内に次の�
 Neovimの `:KeyLog` / `:KeyLogOpen` も収録しています。記録は初期状態でOFFです。手動で開始した場合のログはNeovimのデータディレクトリだけに保存され、Gitへ含めません。
 
 ## 更新・バックアップ・復元
+
+### Python / C++ の補完と開発
+
+2026-11-13に元PCと再照合し、既存の見た目・キー操作を維持してPythonのLSPを追加しました。補完は `nvim-cmp`、スニペット展開は `vim-vsnip` です。コード入力時に候補が表示され、`Ctrl+Space` で手動表示、`Tab` / `Shift+Tab` で移動、`Enter` で確定します。日本語の変換候補はWindows IMEが担当します。
+
+- Python: `pyright` が補完・型診断・定義ジャンプを提供します。プロジェクトごとに `python3 -m venv .venv`、`source .venv/bin/activate`、必要なライブラリの `pip install` を行ってから `nvim` を開きます。依存ライブラリは各プロジェクトのrequirements.txt等から復元してください。
+- C/C++: `clangd` が補完・診断を担当し、コンパイル用の `g++` と `cmake` も依存スクリプトで入ります。CMakeプロジェクトでは `cmake -S . -B build -DCMAKE_EXPORT_COMPILE_COMMANDS=ON` を実行します。独自のincludeパスや標準の指定はプロジェクト側の `compile_commands.json` または `.clangd` に記載してください。AtCoder Library本体は含みません。
+- 共通: `gd` で定義へ、`K` で説明、`Space r n` で名前変更、`Space c a` でコードアクション。候補が出ない場合は `:checkhealth vim.lsp` で `pyright` / `clangd` の接続を確認します。
+- Go: 元PCで追加されていた `gopls` 設定も収録しました。保存時の整形と `F5` の実行を引き継いでいます。
+
+WezTermとNeovim本体だけではLSP、コンパイラー、フォント等は揃いません。上記のWindows/Ubuntu両側の導入が必要です。このプロファイルは **Windows + WSL Ubuntu** 向けです。macOS向けの従来設定は別プロファイルで、同じキー操作の再現対象には含まれません。
+
+実行済み環境を更新する場合も、新しいPython/Go依存を入れるため `bash scripts/install-current-wsl-deps.sh` を一度実行し、設定を再適用してください。
+
+参考: [Pyright公式の導入手順](https://github.com/microsoft/pyright/blob/main/docs/installation.md)、[Neovim LSP設定](https://github.com/neovim/nvim-lspconfig)。
 
 コピー方式なので、WindowsとUbuntuの両方のcloneで `git pull --ff-only` 後に対応するsetupスクリプトを再実行してください。フォントや依存ツールが変わっていなければ、それらの再インストールは不要です。
 

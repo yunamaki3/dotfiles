@@ -258,9 +258,63 @@ require("lazy").setup({
       vim.lsp.config("clangd", { capabilities = caps })
       vim.lsp.enable("clangd")
 
+      -- Python completion, diagnostics and navigation through the same cmp UI.
+      vim.lsp.config("pyright", { capabilities = caps })
+      vim.lsp.enable("pyright")
+
+      vim.api.nvim_create_autocmd("LspAttach", {
+        callback = function(event)
+          local opts = { buffer = event.buf, silent = true }
+          vim.keymap.set("n", "gd", vim.lsp.buf.definition, opts)
+          vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
+          vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, opts)
+          vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, opts)
+        end,
+      })
+
       -- JavaScript / TypeScript
       vim.lsp.config("ts_ls", { capabilities = caps })
       vim.lsp.enable("ts_ls")
+
+      -- Go support added
+      vim.lsp.config("gopls", {
+        cmd = { "gopls" },
+        capabilities = caps,
+        settings = {
+          gopls = { semanticTokens = false },
+        },
+        on_attach = function(client, buf)
+          local opts = { buffer = buf, silent = true }
+          vim.keymap.set("n", "gd", vim.lsp.buf.definition, opts)
+          vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
+
+          -- F5: save and run the current Go file
+          vim.keymap.set("n", "<F5>", function()
+            vim.cmd("write")
+            local file = vim.api.nvim_buf_get_name(buf)
+            vim.cmd("!go run " .. vim.fn.shellescape(file))
+          end, opts)
+
+          -- Format Go code before saving
+          local group = vim.api.nvim_create_augroup(
+            "GoFormat" .. buf, { clear = true }
+          )
+          vim.api.nvim_create_autocmd("BufWritePre", {
+            group = group,
+            buffer = buf,
+            callback = function()
+              vim.lsp.buf.format({
+                bufnr = buf,
+                id = client.id,
+                async = false,
+                timeout_ms = 3000,
+              })
+            end,
+          })
+        end,
+      })
+      vim.lsp.enable("gopls")
+
     end,
   },
   {
